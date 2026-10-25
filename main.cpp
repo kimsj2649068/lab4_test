@@ -1,29 +1,39 @@
-#include "bookStore.h"
+#include "book.h"
+
+namespace kimsj2649068
+{
+    void parVal(book b) {b += 1000;}
+    void parRef(book &r) {r += 1000;}
+    void parPtr(book *p) {*p += 1000;}
+
+    book retVal(book b) {b += 1000; return b;}
+    book& retRef(book& r) {r += 1000; return r;}
+    book* retVal(book* p) {*p += 1000; return p;}
+}
 
 int main()
 {
     using namespace kimsj2649068;
 
-    book b1; std::cout << "book1: \n"; std::cin >> b1; std::cout << b1;
-    book b2; std::cout << "book2: \n"; std::cin >> b2; std::cout << b2;
+    book b = book{"title1", 1, 10000}; std::cout << b;
+    parVal(b); std::cout << b;
+    book& r{b}; std::cout << r;
+    parRef(r); std::cout << r;
+    book* p{&b}; std::cout << *p;
+    parPtr(p); std::cout << *p;
 
-    std::cout << ++b2;
-    std::cout << b2++;
-    std::cout << b2;
+    b = book{"title2", 2, 20000}; std::cout << b;
+    std::cout << retVal(b);
+    std::cout << r; 
+    std::cout << retRef(r);
+    std::cout << *p;
+    std::cout << *retVal(p);
 
-    if ( b1 == b2 )
-        std::cout << "same\n";
-    else
-        std::cout << "different\n";
-
-    std::cout << b1 + b2 << '\n';
+    book* ptr( new book );
+    (*ptr).setTitle("title3"); ptr->setID(3); ptr->setPrice(30000);
+    std::cout << *ptr;
+    delete ptr;
 
     return 0;
+    
 }
-
-// 3. main.cpp: 테스트
-// 두번째 객체에 전위증가연산자 적용한 것을 표준스트림으로 출력
-// 두번째 객체에 후위증가연산자 적용한 것을 표준스트림으로 출력
-// 두번째 객체를 표준스트림으로 출력
-// 두 객체를 비교연산자를 이용하여 비교하여 true면 same, 그렇지 않으면 different를 콘솔창에 출력
-// 두 객체를 +이항연산자를 이용하여 더한 값을 표준스트림으로 출력

@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 namespace kimsj2649068
 {
@@ -8,6 +9,7 @@ namespace kimsj2649068
     private:
         int id; 
         int price;
+        std::string title;
         void testID()
         {
             if ( id < 1 || id > 1000 )
@@ -25,10 +27,13 @@ namespace kimsj2649068
             }
         }
     public:
-        book(int d = 1, int p = 0) : id{d}, price{p} //생성자에서는 쉼표로 연결!
+        book(const std::string& t = "No Title Yet", int d = 1, int p = 0) : title{t}, id{d}, price{p} //생성자에서는 쉼표로 연결!
         { testID(); testPrice(); }
         void input()
         {
+            std::cout << "Enter your title: ";
+            std::getline(std::cin >> std::ws, title);
+
             std::cout << "Enter your id: ";
             std::cin >> id;
             testID();
@@ -36,6 +41,11 @@ namespace kimsj2649068
             std::cout << "Enter your price: ";
             std::cin >> price;
             testPrice();
+
+        }
+        void setTitle(std::string t)
+        {
+            title = t;
         }
         void setID(int d)
         {
@@ -49,34 +59,45 @@ namespace kimsj2649068
         }
         void print() const
         {
-            std::cout << "ID: " << id << ", price: " << price;
+            std::cout << "title: " << title << ", ID: " << id << ", price: " << price;
             std::cout << std::endl;
         }
+        const std::string& getTitle() const {return title;}
         int getID() const {return id;}
         int getPrice() const {return price;}
 
-        book operator++()
+        book& operator++() // const 쓰면 안돼.. price가 바뀌니까!
         {
             ++price;
-            return book{id, price};
+            return (*this);
+            //return book{title, id, price};
         }
         book operator++(int)
         {
-            book temp{id,price};
-            price++;
+            book temp{*this};
+            ++(*this); //price++;
             return temp;
+        }
+        book& operator+=(int p)
+        {
+            this->price += p;
+            return *this;
         }
         friend std::istream& operator>>( std::istream& is, book &b)
         {
+            std::cout << "Enter your title: ";
+            std::getline(is >> std::ws, b.title);
+
             std::cout << "Enter your id: ";
             is >> b.id;
+
             std::cout << "Enter your price: ";
             is >> b.price;
             return is;
         }
         friend std::ostream& operator<<( std::ostream& os, const book &b)
         {
-            os << "ID: " << b.id << ", price: " << b.price << "\n";
+            os << "title: " << b.title << ", ID: " << b.id << ", price: " << b.price << "\n";
             return os;
         }
         friend bool operator==(const book &b1, const book &b2)
